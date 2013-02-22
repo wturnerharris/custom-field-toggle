@@ -1,0 +1,28 @@
+.full-width {
+	text-align: center;
+}
+.ui-toggle {
+	display: inline-block;
+	height: 40px;
+	text-indent: -9999px;
+	width: 120px;
+}
+	.ui-state-on {
+		background-position: top left;
+	}
+	.ui-state-on:hover {
+		background-position: top right;
+	}
+	.ui-state-off {
+		background-position: bottom left;
+	}
+	.ui-state-off:hover {
+		background-position: bottom right;
+	}
+
+.ui-toggle-on-off {
+	background-image: url(images/ui-button-on-off.png);
+}
+
+/* ADMIN */
+#ToggleForm .form-field input { width: 25em; }
