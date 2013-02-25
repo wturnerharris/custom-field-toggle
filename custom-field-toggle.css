@@ -90,3 +90,16 @@
 	background: url(images/ui-screenshot.png) 50% 20% no-repeat;
 	background-size: contain;
 }
+
+li#toplevel_page_custom-field-toggle .wp-menu-image br {
+	background: url(images/ui-admin-icon.png) top left no-repeat;
+	content: "";
+	display: block;
+	height: 16px;
+	margin: 6px 7px;
+	width: 16px;
+}
+li#toplevel_page_custom-field-toggle a:hover .wp-menu-image br,
+li#toplevel_page_custom-field-toggle a.current .wp-menu-image br {
+	background-position: top right;
+}

@@ -92,7 +92,8 @@ class CustomFieldToggle {
 			__( 'Custom Toggles', 'custom-field-toggle' ), 
 			'manage_options', 
 			'custom-field-toggle', 
-			array(&$this, 'cftoggle_interface') 
+			array(&$this, 'cftoggle_interface'),
+			'div'
 		);
 	}
 
@@ -111,13 +112,13 @@ class CustomFieldToggle {
 				array( 'jquery' ), 
 				'1.4.3' 
 			);
-			wp_enqueue_style( 
-				'custom-field-toggle', 
-				plugins_url( 'custom-field-toggle.css', __FILE__ ), 
-				array(), 
-				'1.0' 
-			);
 		endif;
+		wp_enqueue_style( 
+			'custom-field-toggle', 
+			plugins_url( 'custom-field-toggle.css', __FILE__ ), 
+			array(), 
+			'1.0' 
+		);
 		return;
 	}
 
