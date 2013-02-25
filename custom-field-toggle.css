@@ -4,25 +4,61 @@
 .ui-toggle {
 	display: inline-block;
 	height: 40px;
+	position: relative;
 	text-indent: -9999px;
 	width: 120px;
 }
-	.ui-state-on {
-		background-position: top left;
+.ui-toggle i {
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #e3e3e3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e3e3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 0%,#e3e3e3 100%); /* W3C */
+	border: 1px solid #a6a6a6;
+	border-radius: 5px;
+	box-shadow: inset 0 -1px 3px white;
+	box-sizing: border-box;
+	content: "";
+	height: 100%;
+	position: absolute;
+	top: 0;
+	-webkit-transition: left 200ms linear;
+	   -moz-transition: left 200ms linear;
+			transition: left 200ms linear;
+	width: 50px;
+}
+	.ui-state-on i {
+		left: 56px;
 	}
-	.ui-state-on:hover {
-		background-position: top right;
+	.ui-state-on:hover i, 
+	.ui-state-off:hover i {
+		background: #f9f9f9; /* Old browsers */
+		background: -moz-linear-gradient(top, #f9f9f9 0%, #dddddd 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #f9f9f9 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #f9f9f9 0%,#dddddd 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #f9f9f9 0%,#dddddd 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #f9f9f9 0%,#dddddd 100%); /* W3C */
 	}
-	.ui-state-off {
-		background-position: bottom left;
-	}
-	.ui-state-off:hover {
-		background-position: bottom right;
+	.ui-state-off i {
+		left: 14px;
 	}
 
-.ui-toggle-on-off {
-	background-image: url(images/ui-button-on-off.png);
+.ui-toggle.on-off {
+	background-image: url(images/ui-button-on-off-slide.png);
 }
 
 /* ADMIN */
 #ToggleForm .form-field input { width: 25em; }
+
+.toggle-preview {
+	display: inline-block;
+	height: 40px;
+	width: 60px;
+}
+.toggle-preview.on-off {
+	background: url(images/ui-screenshot.png) 50% 20% no-repeat;
+	background-size: contain;
+}
