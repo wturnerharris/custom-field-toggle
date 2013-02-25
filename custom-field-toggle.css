@@ -2,33 +2,65 @@
 	text-align: center;
 }
 .ui-toggle {
+	border-radius: 6px;
 	display: inline-block;
-	height: 40px;
+	height: 36px;
+	margin-top: 6px;
 	position: relative;
-	text-indent: -9999px;
 	width: 120px;
 }
-.ui-toggle i {
-	background: #ffffff; /* Old browsers */
-	background: -moz-linear-gradient(top, #ffffff 0%, #e3e3e3 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e3e3)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #ffffff 0%,#e3e3e3 100%); /* W3C */
-	border: 1px solid #a6a6a6;
-	border-radius: 5px;
-	box-shadow: inset 0 -1px 3px white;
-	box-sizing: border-box;
-	content: "";
-	height: 100%;
-	position: absolute;
-	top: 0;
-	-webkit-transition: left 200ms linear;
-	   -moz-transition: left 200ms linear;
-			transition: left 200ms linear;
-	width: 50px;
-}
+	.ui-toggle.on-off {
+		/* background-image: url(images/ui-button-on-off-slide.png); */
+	}
+	.ui-toggle.on-off:before, .ui-toggle.on-off:after {
+		box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+		font: bold 16px/38px Helvetica;
+		height: 100%;
+		position: absolute;
+		text-transform: uppercase;
+		width: 50%;
+		z-index: 1;
+	}
+	.ui-toggle.on-off:before {
+		background: #32A6E8; /* Old browsers */
+		border-radius: 6px 0 0 6px;
+		color: #FFFFFF;
+		content: "On";
+		left: 0;
+		text-shadow: 1px 1px 0 rgba(100,100,100,0.75);
+	}
+	.ui-toggle.on-off:after {
+		background: #B1B8BD;
+		border-radius: 0 6px 6px 0;
+		color: #565656;
+		content: "Off";
+		right: 0;
+		text-shadow: 1px 1px 0 rgba(255,255,255,0.75);
+	}
+	.ui-toggle i {
+		background: #ffffff; /* Old browsers */
+		background: -moz-linear-gradient(top, #ffffff 0%, #e3e3e3 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e3e3)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, #ffffff 0%,#e3e3e3 100%); /* IE10+ */
+		background: linear-gradient(to bottom, #ffffff 0%,#e3e3e3 100%); /* W3C */
+		border: 1px solid #a9a9a9;
+		border-radius: 5px;
+		box-shadow: inset 0 -1px 3px white;
+		content: "";
+		height: 100%;
+		margin-top: -3px;
+		padding: 2px 0;
+		position: absolute;
+		text-indent: -9999px;
+		top: 0;
+		-webkit-transition: left 200ms linear;
+		   -moz-transition: left 200ms linear;
+				transition: left 200ms linear;
+		width: 50px;
+		z-index: 5;
+	}
 	.ui-state-on i {
 		left: 56px;
 	}
@@ -45,10 +77,6 @@
 	.ui-state-off i {
 		left: 14px;
 	}
-
-.ui-toggle.on-off {
-	background-image: url(images/ui-button-on-off-slide.png);
-}
 
 /* ADMIN */
 #ToggleForm .form-field input { width: 25em; }

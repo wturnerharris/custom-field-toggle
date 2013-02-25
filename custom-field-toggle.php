@@ -347,44 +347,44 @@ class CustomFieldToggle {
 
 				<?php endif; ?>
 
-						<?php wp_nonce_field('custom-field-toggle', '_wpnonce', false) ?>
-						<p class="inside">The post type, page template, and post IDs will filter the posts that show the toggle metabox.</p>
-						<table class="form-table">
-							<tbody>
-							<tr class="form-field form-required">
-								<th scope="row"><label for="title"><?php _e( 'Title' ); ?> <span class="description">(required)</span></label></th>
-								<td><input type="text" aria-required="true" value="<?php echo $toggle->title; ?>" id="title" name="title" placeholder="Name the meta box for your toggle" /></td>
-							</tr>
-							<tr class="form-field form-required">
-								<th scope="row"><label for="field"><?php _e( 'Field' ); ?> <span class="description">(required)</span></label></th>
-								<td><input type="text" aria-required="true" value="<?php echo $toggle->field; ?>" id="field" name="field" placeholder="This is the custom field key." /></td>
-							</tr>
-							<tr class="form-field">
-								<th scope="row"><label for="field"><?php _e( 'Class Name' ); ?> <span class="description">(optional)</span></label></th>
-								<td><input type="text" aria-required="true" value="<?php echo $toggle->post_class; ?>" id="field" name="type_class" placeholder="CSS class name for the toggle; default: on-off" /></td>
-							</tr>
-							<tr class="form-field">
-								<th scope="row"><label for="post_type"><?php _e( 'Post Type' ); ?> <span class="description">(select)</span></label></th>
-								<td><input type="text" value="<?php echo $toggle->post_type; ?>" id="post_type" name="post_type" placeholder="Default: post" /></td>
-							</tr>
-							<tr class="form-field">
-								<th scope="row"><label for="page_template"><?php _e( 'Page Template' ); ?> <span class="description">(pages only)</span></label></th>
-								<td><select name="template">
-									<option value="default"><?php _e( 'Default Template' ); ?></option>
-									<?php page_template_dropdown($toggle->template); ?>
-								</select></td>
-							</tr>
-							<tr class="form-field">
-								<th scope="row"><label for="post_ids">Post IDs <span class="description">(comma separated)</span></label></th>
-								<td><input type="text" value="<?php echo $toggle->post_ids; ?>" id="post_ids" name="post_ids" placeholder="Default: 0 (any)" /></td>
-							</tr>
-							</tbody>
-						</table>
-						<p class="submit inside">
-							<input type="submit" value="Save" class="button-primary" id="save_toggle" name="save_toggle" />
-							<a class="button hide-if-no-js" href="admin.php?page=custom-field-toggle"><?php _e( 'Cancel', 'custom-field-toggle' ) ?></a>
-						</p>
-					</form>
+					<?php wp_nonce_field('custom-field-toggle', '_wpnonce', false) ?>
+					<p class="inside">The post type, page template, and post IDs will filter the posts that show the toggle metabox.</p>
+					<table class="form-table">
+						<tbody>
+						<tr class="form-field form-required">
+							<th scope="row"><label for="title"><?php _e( 'Title' ); ?> <span class="description">(required)</span></label></th>
+							<td><input type="text" aria-required="true" value="<?php echo $toggle->title; ?>" id="title" name="title" placeholder="Name the meta box for your toggle" /></td>
+						</tr>
+						<tr class="form-field form-required">
+							<th scope="row"><label for="field"><?php _e( 'Field' ); ?> <span class="description">(required)</span></label></th>
+							<td><input type="text" aria-required="true" value="<?php echo $toggle->field; ?>" id="field" name="field" placeholder="This is the custom field key." /></td>
+						</tr>
+						<tr class="form-field">
+							<th scope="row"><label for="field"><?php _e( 'Class Name' ); ?> <span class="description">(optional)</span></label></th>
+							<td><input type="text" aria-required="true" value="<?php echo $toggle->post_class; ?>" id="field" name="type_class" placeholder="CSS class name for the toggle; default: on-off" /></td>
+						</tr>
+						<tr class="form-field">
+							<th scope="row"><label for="post_type"><?php _e( 'Post Type' ); ?> <span class="description">(select)</span></label></th>
+							<td><input type="text" value="<?php echo $toggle->post_type; ?>" id="post_type" name="post_type" placeholder="Default: post" autocomplete="off" /></td>
+						</tr>
+						<tr class="form-field">
+							<th scope="row"><label for="page_template"><?php _e( 'Page Template' ); ?> <span class="description">(pages only)</span></label></th>
+							<td><select name="template">
+								<option value="default"><?php _e( 'Default Template' ); ?></option>
+								<?php page_template_dropdown($toggle->template); ?>
+							</select></td>
+						</tr>
+						<tr class="form-field">
+							<th scope="row"><label for="post_ids">Post IDs <span class="description">(comma separated)</span></label></th>
+							<td><input type="text" value="<?php echo $toggle->post_ids; ?>" id="post_ids" name="post_ids" placeholder="Default: 0 (any)" /></td>
+						</tr>
+						</tbody>
+					</table>
+					<p class="submit inside">
+						<input type="submit" value="Save" class="button-primary" id="save_toggle" name="save_toggle" />
+						<a class="button hide-if-no-js" href="admin.php?page=custom-field-toggle"><?php _e( 'Cancel', 'custom-field-toggle' ) ?></a>
+					</p>
+				</form>
 			<?php 
 				break;
 			default : $this->cftoggle_default_form();
@@ -393,7 +393,26 @@ class CustomFieldToggle {
 	?>
 			</div>
 		</div>
-	</div><?php
+	</div>
+	<script type="text/javascript">
+	// <![CDATA[
+		jQuery(document).ready(function($){
+			$('#ToggleForm').keyup( function (){
+				post_type = $('input[name="post_type"]');
+				tpl = $('select[name="template"]');
+				
+				if ( post_type.val() != "page" ) {
+					tpl.attr('disabled','true');
+					tpl.find('option:not([value="default"])').removeAttr('selected');
+					tpl.find('option[value="default"]').attr('selected', 'true');
+				} else {
+					tpl.removeAttr('disabled');
+				}
+			}).trigger('keyup');
+		});
+	// ]]>
+	</script>
+	<?php
 	}
 
 	/**
