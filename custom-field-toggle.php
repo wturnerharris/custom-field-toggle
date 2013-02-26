@@ -435,7 +435,6 @@ class CustomFieldToggle {
 		<input type="hidden" value="add" name="action">
 		<?php wp_nonce_field('custom-field-toggle') ?>
 		<p><?php _e( "Use this tool to create custom toggles for the admin instead of dealing with custom field text values. Simply add a new toggle below and register the settings. To begin, just press the button below.", 'custom-field-toggle '); ?></p>
-		<p><i><?php _e( "Note: Removing a toggle does not remove the custom post meta entry added by the toggle.", 'custom-field-toggle '); ?></i></p>
 		<p><input type="submit" class="button hide-if-no-js" name="custom-field-toggle" id="custom-field-toggle" value="<?php _e( 'Add Toggle', 'custom-field-toggle' ) ?>" /></p>
 		<noscript><p><em><?php _e( 'You must enable Javascript in order to proceed!', 'custom-field-toggle' ) ?></em></p></noscript>
 	</form>
@@ -496,6 +495,8 @@ class CustomFieldToggle {
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+	<br/>
+	<p class="description"><?php _e( "Note: Removing a toggle does not remove the custom post meta entry added by the toggle.", 'custom-field-toggle '); ?></p>
 	<?php	
 	}
 	

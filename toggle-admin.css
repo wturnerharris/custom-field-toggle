@@ -8,9 +8,6 @@
 #ToggleForm .form-field input { 
 	width: 25em; 
 }
-#Toggles p i {
-	color: orangered;
-}
 #Toggles .toggle-preview {
 	display: inline-block;
 	height: 40px;
