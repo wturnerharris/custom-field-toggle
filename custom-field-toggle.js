@@ -1,4 +1,19 @@
+/**
+ * Toggle JS
+ *
+ * @package Custom Field Toggle
+ *
+ */
+
 jQuery(document).ready(function($){
+	
+	/**
+	 * Handles the toggle of the custom field value.
+	 *
+	 * @handler   click
+	 * @return    void
+	 *
+	 */
 	$('.ui-toggle').click(function(){
 		$this = $(this)
 		state = $this.hasClass('ui-state-on');

@@ -4,7 +4,7 @@
 **************************************************************************
 
 Plugin Name:  Custom Field Toggle
-Plugin URI:   http://www.witdesigns.com/plugins/wordpress/custom-field-toggle/
+Plugin URI:   http://www.turnerharris.com/plugins/wordpress/custom-field-toggle/
 Description:  Allows you to create a toggle for a specific custom field.
 Version:      1.0
 Author:       Wes Turner
@@ -105,20 +105,30 @@ class CustomFieldToggle {
 	 *
 	 */
 	function admin_enqueues( $hook_suffix ) {
-		if ( $hook_suffix == 'post-new.php' || $hook_suffix == 'post.php' || $hook_suffix == $this->menu_id ) :
+		if ( $hook_suffix == 'post-new.php' || $hook_suffix == 'post.php' ) {
 			wp_enqueue_script( 
-				'custom-field-toggle', 
+				'field-toggle', 
 				plugins_url( 'custom-field-toggle.js', __FILE__ ), 
-				array( 'jquery' ), 
-				'1.4.3' 
+				array( 'jquery' )
 			);
-		endif;
-		wp_enqueue_style( 
-			'custom-field-toggle', 
-			plugins_url( 'custom-field-toggle.css', __FILE__ ), 
-			array(), 
-			'1.0' 
-		);
+			wp_enqueue_style( 
+				'field-toggle', 
+				plugins_url( 'custom-field-toggle.css', __FILE__ )
+			);
+		}
+		if ( $hook_suffix == $this->menu_id ) {
+			wp_enqueue_script( 
+				'field-toggle-admin', 
+				plugins_url( 'toggle-admin.js', __FILE__ ), 
+				array( 'jquery' )
+			);
+		}
+		if ( is_admin() ) {
+			wp_enqueue_style( 
+				'field-toggle-admin', 
+				plugins_url( 'toggle-admin.css', __FILE__ )
+			);
+		}
 		return;
 	}
 
@@ -138,13 +148,14 @@ class CustomFieldToggle {
 		$tpl = get_post_meta($post->ID, "_wp_page_template", true);
 
 		foreach($results as $result) {
+			if (!isset($i)) $i=0;
 			$post_ids = is_numeric($result->post_id) ? $result->post_id : unserialize($result->post_id);
 			$options = @unserialize($result->type);
 			$t = $options&&$result->post_type == "page"?$options['template']:false;
 			if ( $t != $tpl ) if ( $t != "default" ) continue;
 			if ( $post_ids == $post->ID || $post_ids == 0 || is_array($post_ids) && in_array($post->ID, $post_ids) ) {
 				add_meta_box( 
-					'custom-field-toggle',
+					"custom-field-toggle-$i",
 					$result->title,
 					array(&$this, 'toggle_inner_html'),
 					$result->post_type,
@@ -155,6 +166,7 @@ class CustomFieldToggle {
 						'class' => isset($options['class'])?$options['class']:"on-off",
 					)
 				);
+				$i++;
 			}
 		}
 		return;
@@ -248,17 +260,25 @@ class CustomFieldToggle {
 			}
 			$post_ids = is_array($post_ids) ? serialize( $post_ids ) : 0;
 		}
+		
+		if ( empty($input['title']) || empty($input['field']) ) {
+			$insert = false;
+		} else {
+			$insert = $wpdb->insert( 
+				CFT_TABLE, 
+				array( 
+					'title' => $input['title'], 
+					'type' => serialize( array(
+						'template' => isset($input['template'])?$input['template']:"", 
+						'class' => $input['type_class']==""?"on-off":$input['type_class']
+					) ),
+					'field' => $input['field'],
+					'post_type' => !empty($input['post_type']) ? $input['post_type'] : 'post',
+					'post_id' => $post_ids
+				)
+			);
+		}
 
-		$insert = $wpdb->insert( 
-			CFT_TABLE, 
-			array( 
-				'title' => $input['title'], 
-				'type' => serialize(array('class' => $input['type_class'])),
-				'field' => $input['field'],
-				'post_type' => !empty($input['post_type']) ? $input['post_type'] : 'post',
-				'post_id' => $post_ids
-			)
-		);
 		return ($insert ? 'Toggle Added!' : 'There was a problem adding this toggle.');
 	}
 	
@@ -286,8 +306,9 @@ class CustomFieldToggle {
 		global $wpdb; 
 	?>
 	<div class="wrap">
+		<div class="cft-icons icon32"><br /></div>
 		<h2><?php _e('Custom Field Toggle', 'custom-field-toggle'); ?></h2>
-		<div class="metabox-holder columns-2">
+		<div class="metabox-holder columns-2" id="Toggles">
 		<?php 
 		
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : false;
@@ -324,7 +345,7 @@ class CustomFieldToggle {
 					'field' => ($toggle_obj ? $toggle_obj->field : ''),
 					'post_type' => ($toggle_obj ? $toggle_obj->post_type : ''),
 					'post_class' => ($toggle_ops ? $toggle_ops['class'] : ''),
-					'template' => ($toggle_ops ? $toggle_ops['template'] : ''),
+					'template' => ($toggle_ops&&isset($toggle_ops['template']) ? $toggle_ops['template'] : ''),
 					'post_ids' => ($toggle_obj ? (is_numeric($toggle_obj->post_id) ? ($toggle_obj->post_id > 0 ? $toggle_obj->post_id : '') : implode(',',@unserialize($toggle_obj->post_id))) : '' )
 				);
 				$toggle = (object) $toggle;
@@ -394,24 +415,6 @@ class CustomFieldToggle {
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
-	// <![CDATA[
-		jQuery(document).ready(function($){
-			$('#ToggleForm').keyup( function (){
-				post_type = $('input[name="post_type"]');
-				tpl = $('select[name="template"]');
-				
-				if ( post_type.val() != "page" ) {
-					tpl.attr('disabled','true');
-					tpl.find('option:not([value="default"])').removeAttr('selected');
-					tpl.find('option[value="default"]').attr('selected', 'true');
-				} else {
-					tpl.removeAttr('disabled');
-				}
-			}).trigger('keyup');
-		});
-	// ]]>
-	</script>
 	<?php
 	}
 
@@ -427,13 +430,12 @@ class CustomFieldToggle {
 		$nonce = wp_create_nonce('custom-field-toggle');
 		$toggles = $wpdb->get_results( sprintf( "SELECT * FROM %s", CFT_TABLE ) );
 	?>
-	<div id="message" class="updated fade" style="display:none"><p><?php if (isset($message)) echo $message; ?></p></div>
+	<div id="ToggleMessage" class="updated fade" style="display:none"><p><?php if (isset($message)) echo $message; ?></p></div>
 	<form method="post" action="">
 		<input type="hidden" value="add" name="action">
 		<?php wp_nonce_field('custom-field-toggle') ?>
-		<p><?php _e( "Use this tool to create custom toggles for the admin instead of dealing with custom field text values.", 'custom-field-toggle' ); ?></p>
-		<p><?php _e( "Simply add a new toggle below and register the settings. To begin, just press the button below.", 'custom-field-toggle '); ?></p>
-		<p><i><?php _e( "Note: Removing a toggle does not remove the custom post meta entry.", 'custom-field-toggle '); ?></i></p>
+		<p><?php _e( "Use this tool to create custom toggles for the admin instead of dealing with custom field text values. Simply add a new toggle below and register the settings. To begin, just press the button below.", 'custom-field-toggle '); ?></p>
+		<p><i><?php _e( "Note: Removing a toggle does not remove the custom post meta entry added by the toggle.", 'custom-field-toggle '); ?></i></p>
 		<p><input type="submit" class="button hide-if-no-js" name="custom-field-toggle" id="custom-field-toggle" value="<?php _e( 'Add Toggle', 'custom-field-toggle' ) ?>" /></p>
 		<noscript><p><em><?php _e( 'You must enable Javascript in order to proceed!', 'custom-field-toggle' ) ?></em></p></noscript>
 	</form>
@@ -484,7 +486,8 @@ class CustomFieldToggle {
 				<td class="ptype column-ptype"><?php echo $toggle->post_type; ?></td>
 				<td class="ptype column-ptemplate"><?php 
 					$toggle_ops = @unserialize($toggle->type);
-					echo (!$toggle_ops||$toggle_ops['template']=="default"?"None":$toggle_ops['template']); ?></td>
+					$conditions = (!$toggle_ops||!isset($toggle_ops['template'])||empty($toggle_ops['template'])||$toggle_ops['template']=="default");
+					echo ($conditions?"None":$toggle_ops['template']); ?></td>
 				<td class="pid column-post-id num"><?php 
 					$pids = $toggle->post_id; 
 					echo (is_numeric($pids) ? ($pids == 0 ? 'any' : $pids) : implode(',', unserialize($pids)) ); 
@@ -493,15 +496,6 @@ class CustomFieldToggle {
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-	<script type="text/javascript">
-	// <![CDATA[
-		jQuery(document).ready(function($){
-			m = $('#message');
-			if (m.text() != '') m.show().delay(2500).fadeOut(1500);
-			else m.hide();
-		});
-	// ]]>
-	</script>
 	<?php	
 	}
 	

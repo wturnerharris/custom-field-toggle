@@ -1,0 +1,37 @@
+/**
+ * Admin CSS
+ *
+ * @package Custom Field Toggle
+ *
+ */
+
+#ToggleForm .form-field input { 
+	width: 25em; 
+}
+#Toggles p i {
+	color: orangered;
+}
+#Toggles .toggle-preview {
+	display: inline-block;
+	height: 40px;
+	width: 60px;
+}
+#Toggles .toggle-preview.on-off {
+	background: url(images/ui-screenshot.png) 50% 20% no-repeat;
+	background-size: contain;
+}
+.cft-icons {
+	background: url(images/ui-admin-icon-32.png) top left no-repeat;
+}
+li#toplevel_page_custom-field-toggle .wp-menu-image {
+	background: url(images/ui-admin-icon.png) top left no-repeat;
+	content: "";
+	display: block;
+	height: 16px;
+	margin: 6px 7px;
+	width: 16px !important;
+}
+li#toplevel_page_custom-field-toggle a:hover .wp-menu-image,
+li#toplevel_page_custom-field-toggle a.current .wp-menu-image {
+	background-position: top right;
+}
