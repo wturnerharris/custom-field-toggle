@@ -210,8 +210,7 @@ class CustomFieldToggle {
 		$sql_update = array( 
 			'title' => $input['title'], 
 			'type' => serialize( array(
-				'name' => $input['type_name'], 
-				'template' => $input['template'], 
+				'template' => isset($input['template'])?$input['template']:"", 
 				'class' => $input['type_class']==""?"on-off":$input['type_class']
 			) ),
 			'field' => $input['field'],
@@ -254,7 +253,7 @@ class CustomFieldToggle {
 			CFT_TABLE, 
 			array( 
 				'title' => $input['title'], 
-				'type' => serialize(array('name' => $input['type_name'], 'class' => $input['type_class'])),
+				'type' => serialize(array('class' => $input['type_class'])),
 				'field' => $input['field'],
 				'post_type' => !empty($input['post_type']) ? $input['post_type'] : 'post',
 				'post_id' => $post_ids

@@ -6,6 +6,7 @@
 	display: inline-block;
 	height: 36px;
 	margin-top: 6px;
+	outline: none !important;
 	position: relative;
 	width: 120px;
 }
@@ -51,6 +52,7 @@
 		content: "";
 		height: 100%;
 		margin-top: -3px;
+		overflow: hidden;
 		padding: 2px 0;
 		position: absolute;
 		text-indent: -9999px;
