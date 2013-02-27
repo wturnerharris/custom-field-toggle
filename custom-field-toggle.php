@@ -4,15 +4,15 @@
 **************************************************************************
 
 Plugin Name:  Custom Field Toggle
-Plugin URI:   http://www.turnerharris.com/plugins/wordpress/custom-field-toggle/
+Plugin URI:   http://www.turnerharris.com/plugins/wordpress/
 Description:  Allows you to create a toggle for a specific custom field.
 Version:      1.0
 Author:       Wes Turner
-Author URI:   http://www.witdesigns.com/
+Author URI:   http://www.turnerharris.com/
 
 **************************************************************************
 
-Copyright (C) 2008-2012  Wes Turner
+Copyright (C) 2008-2013  Wes Turner
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
