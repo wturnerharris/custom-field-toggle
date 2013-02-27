@@ -455,7 +455,7 @@ class CustomFieldToggle {
 		<tbody class="list" id="the-list">
 			<?php if (count($toggles) < 1) : ?>
 			<tr class="alternate">
-				<td colspan="6">
+				<td colspan="7">
 					No Toggles Available
 				</td>
 			</tr>
