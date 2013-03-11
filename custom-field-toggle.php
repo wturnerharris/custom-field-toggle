@@ -166,6 +166,7 @@ class CustomFieldToggle {
 						'class' => isset($options['class'])?$options['class']:"on-off",
 					)
 				);
+				remove_meta_box( 'postcustom', $result->post_type, 'normal' );
 				$i++;
 			}
 		}
