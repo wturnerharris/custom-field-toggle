@@ -151,23 +151,39 @@ class CustomFieldToggle {
 			if (!isset($i)) $i=0;
 			$post_ids = is_numeric($result->post_id) ? $result->post_id : unserialize($result->post_id);
 			$options = @unserialize($result->type);
-			$t = $options&&$result->post_type == "page"?$options['template']:false;
-			if ( $t != $tpl ) if ( $t != "default" ) continue;
-			if ( $post_ids == $post->ID || $post_ids == 0 || is_array($post_ids) && in_array($post->ID, $post_ids) ) {
-				add_meta_box( 
-					"custom-field-toggle-$i",
-					$result->title,
-					array(&$this, 'toggle_inner_html'),
-					$result->post_type,
-					'side',
-					'high',
-					array(
-						'field' => $result->field, 
-						'class' => isset($options['class'])?$options['class']:"on-off",
-					)
-				);
-				remove_meta_box( 'postcustom', $result->post_type, 'normal' );
-				$i++;
+			$any_post_type = trim($result->post_type) === "any";
+			if ( $post_ids == $post->ID || $post_ids == 0 || (is_array($post_ids) && in_array($post->ID, $post_ids)) ) {
+				$t = $options&&$options['template']!=""?$options['template']:"default";
+
+				if ( $any_post_type ) {
+					// get array of all available post types, including pages
+					$wp_post_types = get_post_types('','names');
+					$post_types = array_values( $wp_post_types );
+					if (! in_array('page', $post_types) ) $post_types[] = 'page';
+				} else {
+					// split into an array of post types, defaults to single array of 'post'
+					$post_types = explode(",", $result->post_type);
+				}
+				if ( !$any_post_type && count($post_types) == 1 && $post_types[0] == "page") {
+					// check if template matches selected or default
+					if ( $t != $tpl ) continue;					
+				}
+				foreach ( $post_types as $post_type ) {
+					add_meta_box( 
+						"custom-field-toggle-$i",
+						$result->title,
+						array(&$this, 'toggle_inner_html'),
+						trim($post_type),
+						'side',
+						'high',
+						array(
+							'field' => $result->field, 
+							'class' => isset($options['class'])?$options['class']:"on-off",
+						)
+					);
+					remove_meta_box( 'postcustom', $post_type, 'normal' );
+					$i++;
+				}
 			}
 		}
 		return;
