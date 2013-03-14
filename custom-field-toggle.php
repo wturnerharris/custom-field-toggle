@@ -68,10 +68,10 @@ class CustomFieldToggle {
 			title varchar(20) DEFAULT '',
 			type longtext,
 			field VARCHAR(20) DEFAULT '',
-			post_type VARCHAR(20) DEFAULT '',
+			post_type VARCHAR(255) DEFAULT '',
 			post_id longtext,
 			UNIQUE KEY id (id)
-		);";
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql);
