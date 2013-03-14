@@ -49,7 +49,7 @@ class CustomFieldToggle {
 		add_action( 'add_meta_boxes',          array( &$this, 'add_toggle_meta' ), 10, 2 );
 		
 		if ( ! defined( 'CFT_TABLE' ) ) define( 'CFT_TABLE', $wpdb->prefix . 'cft_toggles' );
-		if ( get_option("cft_db_version") != $this->db_version) ) $this->install_cftoggles();
+		if ( get_option("cft_db_version") != $this->db_version) $this->install_cftoggles();
 	}
 	
 	/**
