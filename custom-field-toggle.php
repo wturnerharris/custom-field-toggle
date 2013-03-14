@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 class CustomFieldToggle {
 	var $menu_id;
+	public $db_version = "1.1";
 
 	function __construct() {
 		global $wpdb;
@@ -48,7 +49,7 @@ class CustomFieldToggle {
 		add_action( 'add_meta_boxes',          array( &$this, 'add_toggle_meta' ), 10, 2 );
 		
 		if ( ! defined( 'CFT_TABLE' ) ) define( 'CFT_TABLE', $wpdb->prefix . 'cft_toggles' );
-		
+		if ( get_option("cft_db_version") != $this->db_version) ) $this->install_cftoggles();
 	}
 	
 	/**
@@ -59,24 +60,20 @@ class CustomFieldToggle {
 	 */
 	function install_cftoggles(){
 		global $wpdb;
-		$cft_db_version = "1.0";
-		
 		$table_name = $wpdb->prefix . "cft_toggles";
-		
 		$sql = "CREATE TABLE " . $table_name . " (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			title varchar(20) DEFAULT '',
-			type longtext,
-			field VARCHAR(20) DEFAULT '',
-			post_type VARCHAR(255) DEFAULT '',
-			post_id longtext,
+			title varchar(20) CHARACTER SET utf8 DEFAULT '',
+			type longtext CHARACTER SET utf8,
+			field VARCHAR(20) CHARACTER SET utf8 DEFAULT '',
+			post_type VARCHAR(255) CHARACTER SET utf8 DEFAULT '',
+			post_id longtext CHARACTER SET utf8,
 			UNIQUE KEY id (id)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql);
-		
-		add_option("cft_db_version", $cft_db_version);
+		update_option("cft_db_version", $this->db_version);
 		
 	}
 	
