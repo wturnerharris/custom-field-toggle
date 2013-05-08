@@ -49,7 +49,7 @@ class CustomFieldToggle {
 		add_action( 'add_meta_boxes',          array( &$this, 'add_toggle_meta' ), 10, 2 );
 		
 		if ( ! defined( 'CFT_TABLE' ) ) define( 'CFT_TABLE', $wpdb->prefix . 'cft_toggles' );
-		if ( get_option("cft_db_version") != $this->db_version) $this->install_cftoggles();
+		if ( get_option("cft_db_version") != $this->db_version) $this->install_cftoggles($this->db_version);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ class CustomFieldToggle {
 	 * @return   void
 	 *
 	 */
-	function install_cftoggles(){
+	function install_cftoggles($version){
 		global $wpdb;
 		$table_name = $wpdb->prefix . "cft_toggles";
 		$sql = "CREATE TABLE " . $table_name . " (
@@ -73,7 +73,7 @@ class CustomFieldToggle {
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql);
-		update_option("cft_db_version", $this->db_version);
+		update_option("cft_db_version", $version);
 		
 	}
 	
