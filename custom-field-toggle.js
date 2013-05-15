@@ -15,14 +15,15 @@ jQuery(document).ready(function($){
 	 *
 	 */
 	$('.ui-toggle').click(function(){
-		$this = $(this)
+		var $this = $(this);
 		state = $this.hasClass('ui-state-on');
 		$this.toggleClass('ui-state-on');
 		$this.toggleClass('ui-state-off');
 
 		id = $('#post_ID').val();
 		val = "&val="+(state ? 0 : 1);
-		field = "&field="+$this.prev().val();
+		field = "&field="+$this.parent().find('.key').val();
+		$this.parent().find('.value').val(state ? 0 : 1);
 		
 		$.ajax({
 			url: ajaxurl,
@@ -33,6 +34,7 @@ jQuery(document).ready(function($){
 				if (response.status != true) {
 					$this.toggleClass('ui-state-on');
 					$this.toggleClass('ui-state-off');
+					$this.parent().find('.value').val(state ? 1 : 0);
 				}
 			}
 		})

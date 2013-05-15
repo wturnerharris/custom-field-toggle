@@ -47,6 +47,7 @@ class CustomFieldToggle {
 		add_action( 'admin_enqueue_scripts',   array( &$this, 'admin_enqueues' ) );
 		add_action( 'wp_ajax_toggle_option',   array( &$this, 'ajax_toggle_option' ) );
 		add_action( 'add_meta_boxes',          array( &$this, 'add_toggle_meta' ), 10, 2 );
+		add_action( 'save_post',               array( &$this, 'save_custom_meta'), 10 );
 		
 		if ( ! defined( 'CFT_TABLE' ) ) define( 'CFT_TABLE', $wpdb->prefix . 'cft_toggles' );
 		if ( get_option("cft_db_version") != $this->db_version) $this->install_cftoggles($this->db_version);
@@ -206,7 +207,9 @@ class CustomFieldToggle {
 		// The actual fields for data entry 
 		?>
 		<div class='full-width'>
-			<input id="cft-<?php echo $field; ?>" type="hidden" value="<?php echo $field; ?>" name="cft_field" />
+			<?php wp_nonce_field( 'cft-meta', 'cft-update' ); ?>
+			<input id="cft-<?php echo $field; ?>" type="hidden" value="<?php echo $field; ?>" name="cft_field" class="key" />
+			<input id="cft-state-<?php echo $field; ?>" type="hidden" value="<?php echo $state=="on"?1:0; ?>" name="<?php echo $field; ?>[cft_state]" class="value" />
 			<a href='javascript:void(0);' class='ui-toggle ui-state-<?php echo $state; ?> ui-toggle <?php echo $type; ?>'><i>Toggle</i></a>
 		</div>
 		<?php
@@ -514,6 +517,33 @@ class CustomFieldToggle {
 	<?php	
 	}
 	
+	function save_custom_meta( $post_id ) {
+		// verify if this is an auto save routine. 
+		// If it is our form has not been submitted, so we dont want to do anything
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+
+		// verify this came from the our screen and with proper authorization,
+		// because save_post can be triggered at other times
+
+		if ( !isset($_POST['cft-update']) || !wp_verify_nonce( $_POST['cft-update'], 'cft-meta' ) ) return;
+
+		// Check permissions
+		if ( 'post' == $_POST['post_type'] ) {
+			if ( !current_user_can( 'edit_page', $post_id ) ) return;
+		} else {
+			if ( !current_user_can( 'edit_post', $post_id ) ) return;
+		}
+
+		// OK, we're authenticated: we need to find and save the data
+		$key = @$_REQUEST['cft_field'];
+		$val = @$_REQUEST[$key]['cft_state'];
+		
+		$old_value = (bool)get_post_meta($post_id, $key, true) ? true : false;
+		
+		if ( !$old_value ) update_post_meta($post_id, $key, $val);
+		return;
+	}
+
 	/**
 	 * Ajax function to initialize the toggle.
 	 *
