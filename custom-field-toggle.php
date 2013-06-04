@@ -208,7 +208,7 @@ class CustomFieldToggle {
 		?>
 		<div class='full-width'>
 			<?php wp_nonce_field( 'cft-meta', 'cft-update' ); ?>
-			<input id="cft-<?php echo $field; ?>" type="hidden" value="<?php echo $field; ?>" name="cft_field" class="key" />
+			<input id="cft-<?php echo $field; ?>" type="hidden" value="<?php echo $field; ?>" name="cft_fields[]" class="key" />
 			<input id="cft-state-<?php echo $field; ?>" type="hidden" value="<?php echo $state=="on"?1:0; ?>" name="<?php echo $field; ?>[cft_state]" class="value" />
 			<a href='javascript:void(0);' class='ui-toggle ui-state-<?php echo $state; ?> ui-toggle <?php echo $type; ?>'><i>Toggle</i></a>
 		</div>
@@ -535,12 +535,14 @@ class CustomFieldToggle {
 		}
 
 		// OK, we're authenticated: we need to find and save the data
-		$key = @$_REQUEST['cft_field'];
-		$val = @$_REQUEST[$key]['cft_state'];
+		$keys = @$_REQUEST['cft_fields'];
 		
-		$old_value = (bool)get_post_meta($post_id, $key, true) ? true : false;
-		
-		if ( !$old_value ) update_post_meta($post_id, $key, $val);
+		if ( is_array($keys) ) {
+			foreach ($keys as $key){
+				$val = @$_REQUEST[$key]['cft_state'];
+				update_post_meta($post_id, $key, $val);
+			}
+		}
 		return;
 	}
 
