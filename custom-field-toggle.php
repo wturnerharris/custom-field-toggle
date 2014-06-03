@@ -164,7 +164,7 @@ class CustomFieldToggle {
 				}
 				if ( !$any_post_type && count($post_types) == 1 && $post_types[0] == "page") {
 					// check if template matches selected or default
-					if ( $t != $tpl ) continue;					
+					if ( !empty($tpl) && $t != $tpl ) continue;
 				}
 				foreach ( $post_types as $post_type ) {
 					add_meta_box( 
